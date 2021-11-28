@@ -1,0 +1,49 @@
+package com.angogasapps.buylistservice.controllers
+
+import com.angogasapps.buylistservice.entities.Product
+import com.angogasapps.buylistservice.services.BuyListService
+import com.angogasapps.buylistservice.values.PATH_BUY_LISTS
+import com.angogasapps.buylistservice.values.PATH_BUY_LIST_LISTENER
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.messaging.simp.SimpMessagingTemplate
+import org.springframework.web.bind.annotation.*
+
+@RestController
+class ProductController {
+    @Autowired
+    private lateinit var buyListService: BuyListService
+    @Autowired
+    private lateinit var messagingTemplate: SimpMessagingTemplate
+
+    @PostMapping("$PATH_BUY_LISTS/{familyId}/{buyListId}/{productId}")
+    fun createProduct(
+        @PathVariable familyId: String,
+        @PathVariable buyListId: String,
+        @PathVariable productId: String,
+        @RequestParam(value = "product") product: Product
+    ) {
+        buyListService.createProduct(buyListId, productId, product)
+        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
+    }
+
+    @DeleteMapping("$PATH_BUY_LISTS/{familyId}/{buyListId}/{productId}")
+    fun deleteProduct(
+        @PathVariable familyId: String,
+        @PathVariable buyListId: String,
+        @PathVariable productId: String
+    ) {
+        buyListService.deleteProduct(buyListId, productId)
+        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
+    }
+
+    @PatchMapping("$PATH_BUY_LISTS/{familyId}/{buyListId}/{productId}")
+    fun updateProduct(
+        @PathVariable familyId: String,
+        @PathVariable buyListId: String,
+        @PathVariable productId: String,
+        @RequestParam(value = "product") product: Product
+    ) {
+        buyListService.updateProduct(buyListId, productId, product)
+        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
+    }
+}
