@@ -17,6 +17,7 @@ class BuyListService {
 
     fun deleteBuyList(familyId: String, buyListId: String) {
         buyListRepository.deleteById(buyListId)
+        //TODO: remove all products from this buylist
     }
 
     fun updateBuyListName(buyListId: String, newName: String) {

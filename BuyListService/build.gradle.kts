@@ -27,6 +27,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     runtimeOnly("org.postgresql:postgresql")
+
+//    implementation("io.springfox:springfox-boot-starter:3.0.0")
+
 }
 
 tasks.withType<KotlinCompile> {

@@ -5,6 +5,7 @@ import com.angogasapps.buylistservice.exceptions.EqualsIdException
 import com.angogasapps.buylistservice.services.BuyListService
 import com.angogasapps.buylistservice.values.PATH_BUY_LISTS
 import com.angogasapps.buylistservice.values.PATH_BUY_LIST_LISTENER
+import com.angogasapps.buylistservice.values.PATH_TOPIC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.web.bind.annotation.*
@@ -31,7 +32,7 @@ class BuyListController {
         buyList.id = buyListId
         buyListService.createBuyList(familyId, buyList)
 
-        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
+        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}", buyList)
     }
 
     @DeleteMapping("${PATH_BUY_LISTS}/{familyId}/{buyListId}")
@@ -50,8 +51,8 @@ class BuyListController {
         messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
     }
 
-    @GetMapping()
-    fun getAllBuyLists() {
+    @GetMapping("${PATH_BUY_LISTS}/{familyId}")
+    fun getAllBuyLists(@PathVariable familyId: String) {
 
     }
 
