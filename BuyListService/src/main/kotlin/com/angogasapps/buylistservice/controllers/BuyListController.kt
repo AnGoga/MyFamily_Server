@@ -53,7 +53,7 @@ class BuyListController {
 
     @GetMapping("${PATH_BUY_LISTS}/{familyId}")
     fun getAllBuyLists(@PathVariable familyId: String) {
-
+        buyListService.getAllBuyLists(familyId)
     }
 
 }
