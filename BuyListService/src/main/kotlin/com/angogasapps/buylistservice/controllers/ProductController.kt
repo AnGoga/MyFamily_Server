@@ -22,7 +22,7 @@ class ProductController {
         @PathVariable productId: String,
         @RequestParam(value = "product") product: Product
     ) {
-        buyListService.createProduct(buyListId, productId, product)
+        buyListService.createProduct(familyId, buyListId, productId, product)
         messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
     }
 
@@ -32,7 +32,7 @@ class ProductController {
         @PathVariable buyListId: String,
         @PathVariable productId: String
     ) {
-        buyListService.deleteProduct(buyListId, productId)
+        buyListService.deleteProduct(familyId, buyListId, productId)
         messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
     }
 
@@ -41,9 +41,9 @@ class ProductController {
         @PathVariable familyId: String,
         @PathVariable buyListId: String,
         @PathVariable productId: String,
-        @RequestParam(value = "product") product: Product
+        @RequestBody product: Product
     ) {
-        buyListService.updateProduct(buyListId, productId, product)
-        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
+        buyListService.updateProduct(familyId, buyListId, productId, product)
+        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}", product)
     }
 }

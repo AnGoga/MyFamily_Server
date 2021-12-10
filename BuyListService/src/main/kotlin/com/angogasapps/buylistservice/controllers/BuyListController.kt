@@ -47,7 +47,7 @@ class BuyListController {
         @PathVariable buyListId: String,
         @RequestParam(value = "name") newName: String
     ) {
-        buyListService.updateBuyListName(buyListId, newName)
+        buyListService.updateBuyListName(familyId, buyListId, newName)
         messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
     }
 

@@ -18,5 +18,5 @@ data class Product(
     var buyListId: String = "",
     @ElementCollection
     @Column(name = "image_url")
-    var imageUrl: MutableList<String> = ArrayList()
+    var imageUrls: MutableList<String> = ArrayList()
 )

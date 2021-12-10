@@ -12,9 +12,7 @@ data class BuyList(
     var id: String = "",
     @Column(name = "title")
     var title: String = "",
-    @OneToMany(fetch = FetchType.LAZY)
-    @NotFound(action = NotFoundAction.IGNORE)
-    @Column(name = "products")
-    @JoinColumn(name = "buy_list_id")
+    @OneToMany(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "products")
     var products: MutableList<Product> = ArrayList()
 )

@@ -1,5 +1,6 @@
 package com.angogasapps.buylistservice.services
 
+import com.angogasapps.buylistservice.enums.EBuyListEvents
 import com.angogasapps.buylistservice.entities.BuyList
 import com.angogasapps.buylistservice.entities.Product
 import com.angogasapps.buylistservice.repositories.BuyListRepository
@@ -13,33 +14,58 @@ class BuyListService {
     private lateinit var buyListRepository: BuyListRepository
     @Autowired
     private lateinit var productRepository: ProductRepository
+    @Autowired
+    private lateinit var notifier: BuyListChangesNotifier
 
     fun createBuyList(familyId: String, buyList: BuyList) {
         buyList.products.forEach { it.buyListId = buyList.id }
         buyListRepository.save(buyList)
+
+        notifier.notifyChange(familyId, EBuyListEvents.buyListAdded, buyList)
     }
 
     fun deleteBuyList(familyId: String, buyListId: String) {
         buyListRepository.deleteById(buyListId)
         productRepository.deleteAllByBuyListId(buyListId)
+
+        notifier.notifyChange(familyId, EBuyListEvents.buyListRemoved, BuyList(id = buyListId))
     }
 
-    fun updateBuyListName(buyListId: String, newName: String) {
+    fun updateBuyListName(familyId: String, buyListId: String, newName: String) {
         buyListRepository.updateBuyListName(id = buyListId, name = newName)
+
+        notifier.notifyChange(familyId, EBuyListEvents.buyListChanged, BuyList(id = buyListId, title = newName))
     }
 
-    fun createProduct(buyListId: String, productId: String, product: Product) {
+    fun createProduct(familyId: String, buyListId: String, productId: String, product: Product) {
         product.buyListId = buyListId
         productRepository.save(product)
+
+        notifier.notifyChange(
+            familyId,
+            EBuyListEvents.productAdded,
+            BuyList(id = buyListId, products = mutableListOf(product))
+        )
     }
 
-    fun updateProduct(buyListId: String, productId: String, product: Product) {
-//        productRepository.updateProductStats(productId, product.title, product.comment)
+    fun updateProduct(familyId: String, buyListId: String, productId: String, product: Product) {
         productRepository.save(product)
+
+        notifier.notifyChange(
+            familyId,
+            EBuyListEvents.productChanged,
+            BuyList(id = buyListId, products = mutableListOf(product))
+        )
     }
 
-    fun deleteProduct(buyListId: String, productId: String) {
+    fun deleteProduct(familyId: String, buyListId: String, productId: String) {
         productRepository.deleteById(productId)
+
+        notifier.notifyChange(
+            familyId,
+            EBuyListEvents.productRemoved,
+            BuyList(id = buyListId, products = mutableListOf(Product(id = productId)))
+        )
     }
 
     fun getAllBuyLists(familyId: String) {
