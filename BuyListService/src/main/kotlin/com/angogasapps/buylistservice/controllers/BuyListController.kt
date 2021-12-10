@@ -16,9 +16,6 @@ import javax.xml.bind.JAXBElement
 class BuyListController {
     @Autowired
     private lateinit var buyListService: BuyListService
-    @Autowired
-    private lateinit var messagingTemplate: SimpMessagingTemplate
-
 
     @PostMapping("${PATH_BUY_LISTS}/{familyId}/{buyListId}")
     fun createBuyList(
@@ -32,13 +29,11 @@ class BuyListController {
         buyList.id = buyListId
         buyListService.createBuyList(familyId, buyList)
 
-        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}", buyList)
     }
 
     @DeleteMapping("${PATH_BUY_LISTS}/{familyId}/{buyListId}")
     fun deleteBuyList(@PathVariable familyId: String, @PathVariable buyListId: String) {
         buyListService.deleteBuyList(familyId, buyListId)
-        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
     }
 
     @PatchMapping("${PATH_BUY_LISTS}/{familyId}/{buyListId}")
@@ -48,12 +43,12 @@ class BuyListController {
         @RequestParam(value = "name") newName: String
     ) {
         buyListService.updateBuyListName(familyId, buyListId, newName)
-        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
     }
 
     @GetMapping("${PATH_BUY_LISTS}/{familyId}")
-    fun getAllBuyLists(@PathVariable familyId: String) {
-        buyListService.getAllBuyLists(familyId)
+    fun getAllBuyLists(@PathVariable familyId: String): MutableList<BuyList> {
+        val list = buyListService.getAllBuyLists(familyId)
+        return list
     }
 
 }

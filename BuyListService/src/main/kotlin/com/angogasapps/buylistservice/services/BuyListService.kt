@@ -68,7 +68,8 @@ class BuyListService {
         )
     }
 
-    fun getAllBuyLists(familyId: String) {
+    fun getAllBuyLists(familyId: String): MutableList<BuyList> {
         //TODO: create table for binds families and buyLists
+        return mutableListOf()
     }
 }

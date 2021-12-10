@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*
 class ProductController {
     @Autowired
     private lateinit var buyListService: BuyListService
-    @Autowired
-    private lateinit var messagingTemplate: SimpMessagingTemplate
 
     @PostMapping("$PATH_BUY_LISTS/{familyId}/{buyListId}/{productId}")
     fun createProduct(
@@ -23,7 +21,6 @@ class ProductController {
         @RequestParam(value = "product") product: Product
     ) {
         buyListService.createProduct(familyId, buyListId, productId, product)
-        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
     }
 
     @DeleteMapping("$PATH_BUY_LISTS/{familyId}/{buyListId}/{productId}")
@@ -33,7 +30,6 @@ class ProductController {
         @PathVariable productId: String
     ) {
         buyListService.deleteProduct(familyId, buyListId, productId)
-        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}")
     }
 
     @PatchMapping("$PATH_BUY_LISTS/{familyId}/{buyListId}/{productId}")
@@ -44,6 +40,5 @@ class ProductController {
         @RequestBody product: Product
     ) {
         buyListService.updateProduct(familyId, buyListId, productId, product)
-        messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}", product)
     }
 }
