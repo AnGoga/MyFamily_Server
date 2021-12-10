@@ -2,7 +2,9 @@ package com.angogasapps.buylistservice.services
 
 import com.angogasapps.buylistservice.enums.EBuyListEvents
 import com.angogasapps.buylistservice.entities.BuyList
+import com.angogasapps.buylistservice.entities.BuyListIdsBinding
 import com.angogasapps.buylistservice.entities.Product
+import com.angogasapps.buylistservice.repositories.BuyListBindingRepository
 import com.angogasapps.buylistservice.repositories.BuyListRepository
 import com.angogasapps.buylistservice.repositories.ProductRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,11 +17,14 @@ class BuyListService {
     @Autowired
     private lateinit var productRepository: ProductRepository
     @Autowired
+    private lateinit var buyListBindingRepository: BuyListBindingRepository
+    @Autowired
     private lateinit var notifier: BuyListChangesNotifier
 
     fun createBuyList(familyId: String, buyList: BuyList) {
         buyList.products.forEach { it.buyListId = buyList.id }
         buyListRepository.save(buyList)
+        buyListBindingRepository.save(BuyListIdsBinding(buyListId = buyList.id, familyId = familyId))
 
         notifier.notifyChange(familyId, EBuyListEvents.buyListAdded, buyList)
     }
@@ -27,6 +32,8 @@ class BuyListService {
     fun deleteBuyList(familyId: String, buyListId: String) {
         buyListRepository.deleteById(buyListId)
         productRepository.deleteAllByBuyListId(buyListId)
+        buyListBindingRepository.deleteById(buyListId)
+
 
         notifier.notifyChange(familyId, EBuyListEvents.buyListRemoved, BuyList(id = buyListId))
     }
@@ -69,7 +76,8 @@ class BuyListService {
     }
 
     fun getAllBuyLists(familyId: String): MutableList<BuyList> {
-        //TODO: create table for binds families and buyLists
-        return mutableListOf()
+        val idsList = buyListBindingRepository.findAllByFamilyId(familyId)
+        val list = buyListRepository.findAllById(idsList) as MutableList<BuyList>
+        return list
     }
 }
