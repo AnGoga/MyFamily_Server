@@ -20,7 +20,7 @@ class UserController {
     }
 
     @PatchMapping("${PATH_USERS}/{userId}")
-    fun updateUser(@PathVariable userId: String, @RequestParam(value = "user") user: User) {
+    fun updateUser(@PathVariable userId: String, @RequestBody user: User) {
         user.id = userId
         println(userId + user)
         userRepository.updateUser(user)

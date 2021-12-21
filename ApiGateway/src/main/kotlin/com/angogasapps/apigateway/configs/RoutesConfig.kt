@@ -13,8 +13,12 @@ class RoutesConfig {
     @Bean
     fun gatewayRoutes(builder: RouteLocatorBuilder): RouteLocator {
         return builder.routes()
-            .route { it.path("/buy_lists/**")
-                    .uri("lb://buy-list-service-client")
+            .route {
+                it.path("/buy_lists/**")
+                .uri("lb://buy-list-service-client")
+            }.route {
+                it.path("/users-and-families/**")
+                .uri("lb://users-and-families-service-client")
             }.build()
     }
 }

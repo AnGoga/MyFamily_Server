@@ -31,6 +31,9 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server")
     implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
+
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
+
 }
 
 dependencyManagement {

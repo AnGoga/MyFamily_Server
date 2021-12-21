@@ -1,5 +1,6 @@
 package com.angogasapps.myfamily.values
 
 
-const val PATH_USERS = "/users"
-const val PATH_FAMILIES = "/families"
+const val BASE_PATH = "/users-and-families"
+const val PATH_USERS = "$BASE_PATH/users"
+const val PATH_FAMILIES = "$BASE_PATH/families"
