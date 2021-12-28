@@ -7,6 +7,7 @@ import com.angogasapps.buylistservice.values.PATH_BUY_LISTS
 import com.angogasapps.buylistservice.values.PATH_BUY_LIST_LISTENER
 import com.angogasapps.buylistservice.values.PATH_TOPIC
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.web.bind.annotation.*
 import javax.xml.bind.JAXBElement
@@ -22,18 +23,20 @@ class BuyListController {
         @PathVariable(value = "familyId") familyId: String,
         @PathVariable(value = "buyListId") buyListId: String,
         @RequestBody buyList: BuyList
-    ) {
+    ) : ResponseEntity<String> {
         if (buyList.id != buyListId)
             throw EqualsIdException("buylist ids in path($buyListId) and in object(${buyList.id}) not equals")
         println(buyList)
         buyList.id = buyListId
         buyListService.createBuyList(familyId, buyList)
 
+        return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("${PATH_BUY_LISTS}/{familyId}/{buyListId}")
-    fun deleteBuyList(@PathVariable familyId: String, @PathVariable buyListId: String) {
+    fun deleteBuyList(@PathVariable familyId: String, @PathVariable buyListId: String): ResponseEntity<String> {
         buyListService.deleteBuyList(familyId, buyListId)
+        return ResponseEntity.ok().build()
     }
 
     @PatchMapping("${PATH_BUY_LISTS}/{familyId}/{buyListId}")
@@ -41,8 +44,9 @@ class BuyListController {
         @PathVariable familyId: String,
         @PathVariable buyListId: String,
         @RequestParam(value = "name") newName: String
-    ) {
+    ): ResponseEntity<String> {
         buyListService.updateBuyListName(familyId, buyListId, newName)
+        return ResponseEntity.ok().build()
     }
 
     @GetMapping("${PATH_BUY_LISTS}/{familyId}")
