@@ -43,9 +43,9 @@ class BuyListController {
     fun updateBuyListName(
         @PathVariable familyId: String,
         @PathVariable buyListId: String,
-        @RequestParam(value = "name") newName: String
+        @RequestBody buyList: BuyList
     ): ResponseEntity<String> {
-        buyListService.updateBuyListName(familyId, buyListId, newName)
+        buyListService.updateBuyListName(familyId, buyListId, buyList.title)
         return ResponseEntity.ok().build()
     }
 

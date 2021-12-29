@@ -40,7 +40,6 @@ class BuyListService {
 
     fun updateBuyListName(familyId: String, buyListId: String, newName: String) {
         buyListRepository.updateBuyListName(id = buyListId, name = newName)
-
         notifier.notifyChange(familyId, EBuyListEvents.buyListChanged, BuyList(id = buyListId, title = newName))
     }
 

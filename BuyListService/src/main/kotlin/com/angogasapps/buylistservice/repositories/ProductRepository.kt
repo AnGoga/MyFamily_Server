@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 interface ProductRepository : CrudRepository<Product, String> {
     @Modifying
-    @Query("delete from Product p where p.buyListId = :buy_list_id", nativeQuery = true)
+    @Transactional
+    @Query("delete from Product p where p.buy_list_id = :buy_list_id", nativeQuery = true)
     fun deleteAllByBuyListId(@Param("buy_list_id") buy_list_id: String)
 
 }
