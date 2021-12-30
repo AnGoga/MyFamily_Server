@@ -7,17 +7,24 @@ import com.angogasapps.buylistservice.entities.Product
 import com.angogasapps.buylistservice.repositories.BuyListBindingRepository
 import com.angogasapps.buylistservice.repositories.BuyListRepository
 import com.angogasapps.buylistservice.repositories.ProductRepository
+import org.hibernate.Hibernate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class BuyListService {
     @Autowired
     private lateinit var buyListRepository: BuyListRepository
+
     @Autowired
     private lateinit var productRepository: ProductRepository
+
     @Autowired
     private lateinit var buyListBindingRepository: BuyListBindingRepository
+
     @Autowired
     private lateinit var notifier: BuyListChangesNotifier
 
@@ -74,9 +81,17 @@ class BuyListService {
         )
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true, noRollbackFor = [Exception::class])
     fun getAllBuyLists(familyId: String): MutableList<BuyList> {
         val idsList = buyListBindingRepository.findAllByFamilyId(familyId)
-        val list = buyListRepository.findAllById(idsList) as MutableList<BuyList>
+        val list = buyListRepository.findAllById(idsList).toMutableList()
+        list.forEach {
+            Hibernate.initialize(it.products)
+            it.products.forEach { 
+                Hibernate.initialize(it.imageUrls)
+            }
+        }
+
         return list
     }
 }

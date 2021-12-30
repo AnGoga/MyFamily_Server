@@ -15,4 +15,5 @@ interface BuyListRepository : CrudRepository<BuyList, String> {
     @Transactional
     @Query("update BuyList b set b.title = :title where b.id = :id")
     fun updateBuyListName(@Param("id") id: String, @Param("title") name: String)
+
 }
