@@ -1,6 +1,8 @@
 package com.angogasapps.buylistservice.controllers
 
 import com.angogasapps.buylistservice.entities.BuyList
+import com.angogasapps.buylistservice.enums.EBuyListEvents
+import com.angogasapps.buylistservice.models.ChangeMessage
 import com.angogasapps.buylistservice.services.BuyListService
 import com.angogasapps.buylistservice.values.PATH_BUY_LIST_LISTENER
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,7 +30,7 @@ class RealTimeController {
 //    }
 
     @SubscribeMapping("/buy_lists/changes/{familyId}")
-    fun onSubscribe(@Payload(required = false) body: String?, @DestinationVariable familyId: String): MutableList<BuyList> {
-        return buyListService.getAllBuyLists(familyId)
+    fun onSubscribe(@Payload(required = false) body: String?, @DestinationVariable familyId: String): ChangeMessage {
+        return ChangeMessage(EBuyListEvents.initMessage, buyListService.getAllBuyLists(familyId))
     }
 }

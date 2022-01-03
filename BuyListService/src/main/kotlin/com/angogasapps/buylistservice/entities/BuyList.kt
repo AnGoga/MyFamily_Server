@@ -15,7 +15,7 @@ data class BuyList(
     @Column(name = "title")
     var title: String = "",
     @OneToMany(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "products")
+    @JoinColumn(name = "buy_list_id")
     var products: MutableList<Product> = ArrayList()
 ) {
 //    constructor(): this(id = "", title = "", products = ArrayList())

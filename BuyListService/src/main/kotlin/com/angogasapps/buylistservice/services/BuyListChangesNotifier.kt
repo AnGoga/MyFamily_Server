@@ -14,7 +14,7 @@ class BuyListChangesNotifier {
     private lateinit var messagingTemplate: SimpMessagingTemplate
 
     fun notifyChange(familyId: String, event: EBuyListEvents, buyList: BuyList) {
-        val message = ChangeMessage(event, buyList)
+        val message = ChangeMessage(event, mutableListOf(buyList))
         messagingTemplate.convertAndSend("$PATH_BUY_LIST_LISTENER/${familyId}", message)
     }
 }
