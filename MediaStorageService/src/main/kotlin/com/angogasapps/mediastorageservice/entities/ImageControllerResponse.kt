@@ -1,3 +1,3 @@
 package com.angogasapps.mediastorageservice.entities
 
-class ImageControllerResponse(val imageUrl: String)
+data class ImageControllerResponse(val imageUrl: String)
