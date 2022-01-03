@@ -5,6 +5,7 @@
     <file type="web" url="file://$PROJECT_DIR$/ApiGateway" />
     <file type="web" url="file://$PROJECT_DIR$/BuyListService" />
     <file type="web" url="file://$PROJECT_DIR$/DiscoveryService" />
+    <file type="web" url="file://$PROJECT_DIR$/MediaStorageService" />
     <file type="web" url="file://$PROJECT_DIR$/users_and_families_microservice" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="jbr-11" project-jdk-type="JavaSDK">
