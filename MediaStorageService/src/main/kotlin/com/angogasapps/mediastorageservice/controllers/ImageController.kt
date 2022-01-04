@@ -1,6 +1,8 @@
 package com.angogasapps.mediastorageservice.controllers
 
 import com.angogasapps.mediastorageservice.entities.ImageControllerResponse
+import com.angogasapps.mediastorageservice.models.MediaFileInfo
+import com.angogasapps.mediastorageservice.models.MediaResponse
 import com.angogasapps.mediastorageservice.repositories.ImageStorageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -16,16 +18,17 @@ class ImageController {
     private lateinit var repository: ImageStorageRepository
 
     @PostMapping(value = ["/upload"])//, /*produces = [MediaType.IMAGE_JPEG_VALUE]*//*, consumes = ["multipart/form-data"]*/)
-    fun uploadJPEGImage(@RequestParam("file") file: MultipartFile): ImageControllerResponse {
-        val id = repository.save(file)
-        val url = "http://192.168.1.11:8092/media_storage/media/images/get/${id}"
-        val response = ImageControllerResponse(imageUrl = url)
+    fun uploadJPEGImage(@RequestParam("file") file: MultipartFile, @RequestParam("info") info: MediaFileInfo): MediaResponse {
+        val id = repository.save(file, info)
+//        val url = "http://192.168.1.11:8092/media_storage/media/images/get/${id}"
+
+        val response = MediaResponse(MediaFileInfo(id = id))
         return response
     }
 
-    @GetMapping(value = ["/get/{id}"], produces = [MediaType.IMAGE_JPEG_VALUE])
-    fun getImage(@PathVariable id: String): Resource {
-        val resource = repository.getImage(id)
+    @GetMapping(value = ["/get"], produces = [MediaType.IMAGE_JPEG_VALUE])
+    fun getImage(@RequestBody info: MediaFileInfo): Resource {
+        val resource = repository.getImage(info.id)
         return resource
     }
 }
