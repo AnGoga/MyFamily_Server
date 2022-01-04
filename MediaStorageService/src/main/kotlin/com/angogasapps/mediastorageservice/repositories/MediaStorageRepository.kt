@@ -13,32 +13,35 @@ import java.util.*
 
 
 @Repository
-class ImageStorageRepository {
+class MediaStorageRepository {
     private val root: Path //= Paths.get("C:/Java/IT_school_project/project/server_dir/media/images")
+    private val absolutePath: String
 
     init {
         val path = File("").absolutePath
-        root = Paths.get("$path\\media\\images")
-        if (!Files.exists(root.parent))
-            Files.createDirectory(root.parent)
-        if (!Files.exists(root))
-            Files.createDirectory(root)
+        absolutePath = "$path\\media_storage\\storage"
+        root = Paths.get(absolutePath)
+        createPath(root)
     }
 
-    fun save(file: MultipartFile, info: MediaFileInfo): String {
+    fun saveFile(file: MultipartFile, info: MediaFileInfo): String {
         val id = UUID.randomUUID().toString()
-        Files.copy(file.inputStream, root.resolve(id))
+        val path = Paths.get(absolutePath + info.type.buildPath(info)).also { createPath(it) }
+        Files.copy(file.inputStream, path.resolve(id))
         return id
     }
 
-    fun getImage(id: String): Resource {
-        val file = root.resolve(id)
+    fun getMediaFile(info: MediaFileInfo): Resource {
+        val file = Paths.get(absolutePath + info.type.buildPath(info)).resolve(info.id)
         val resource = UrlResource(file.toUri())
-
         return if (resource.exists() || resource.isReadable)
             resource
         else
             throw RuntimeException("Could not read the file!")
+    }
+
+    private fun createPath(path: Path) {
+        if (!Files.exists(path)) Files.createDirectories(path)
     }
 
 }

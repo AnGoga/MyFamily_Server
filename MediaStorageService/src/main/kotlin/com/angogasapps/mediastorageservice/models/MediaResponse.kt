@@ -1,3 +1,3 @@
 package com.angogasapps.mediastorageservice.models
 
-data class MediaResponse(val file: MediaFileInfo)
+data class MediaResponse(val fileInfo: MediaFileInfo)

@@ -8,13 +8,13 @@ enum class EMediaType: Pathable {
         override fun buildPath(fileInfo: MediaFileInfo) = throw Exception("NOTHING haven't path!")
     },
     CHAT_IMAGE {
-        override fun buildPath(fileInfo: MediaFileInfo) = "\\chat\\image_message\\${fileInfo.familyId}"
+        override fun buildPath(fileInfo: MediaFileInfo) = "\\chat\\${fileInfo.familyId}\\image_message"
     },
     CHAT_VOICE {
-        override fun buildPath(fileInfo: MediaFileInfo) = "\\chat\\voice_message\\${fileInfo.familyId}"
+        override fun buildPath(fileInfo: MediaFileInfo) = "\\chat\\${fileInfo.familyId}\\voice_message"
     },
     CHAT_FILE {
-        override fun buildPath(fileInfo: MediaFileInfo) = "\\chat\\file_message\\${fileInfo.familyId}"
+        override fun buildPath(fileInfo: MediaFileInfo) = "\\chat\\${fileInfo.familyId}\\file_message"
     },
 
     USER_IMAGE {
