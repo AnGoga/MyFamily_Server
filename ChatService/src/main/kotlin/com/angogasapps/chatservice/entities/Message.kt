@@ -1,6 +1,7 @@
 package com.angogasapps.chatservice.entities
 
 import com.angogasapps.chatservice.composite_keys.MessagePK
+import org.hibernate.annotations.GenericGenerator
 import java.io.Serializable
 import javax.persistence.*
 
@@ -10,12 +11,16 @@ import javax.persistence.*
 data class Message(
     @Id
     @Column(nullable = false)
-    var familyId: String = "",
-
-    @Column(nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Id
+    @GenericGenerator(
+        name = "chat-sequence",
+        strategy = "com.angogasapps.chatservice.key_generators.MyGenerator"
+    )
+    @GeneratedValue(generator = "chat-sequence")
     var id: Long = 0,
+
+    @Id
+    @Column(nullable = false)
+    var familyId: String = "",
 
     @Column(name = "field_from")
     var from: String = "",
