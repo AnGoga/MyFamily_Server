@@ -34,6 +34,8 @@ dependencies {
 
     implementation("io.springfox:springfox-boot-starter:3.0.0")
 
+//    implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
+
 }
 
 dependencyManagement {
