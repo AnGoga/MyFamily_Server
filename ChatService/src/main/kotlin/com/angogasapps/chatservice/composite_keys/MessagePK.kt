@@ -9,7 +9,7 @@ import javax.persistence.Id
 
 class MessagePK(
     var familyId: String = "",
-    var id: Long = 0
+    var number: Long = 0
 ) : Serializable {
     constructor() : this("", 0) {}
 }

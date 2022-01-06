@@ -6,20 +6,15 @@ import java.io.Serializable
 import javax.persistence.*
 
 @Entity
-@Table
+@Table(name = "MESSAGE_TABLE")
 @IdClass(MessagePK::class)
 data class Message(
     @Id
     @Column(nullable = false)
-    @GenericGenerator(
-        name = "chat-sequence",
-        strategy = "com.angogasapps.chatservice.key_generators.MyGenerator"
-    )
-    @GeneratedValue(generator = "chat-sequence")
-    var id: Long = 0,
-
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    var number: Long = 0,
     @Id
-    @Column(nullable = false)
+    @Column(name = "family_id",nullable = false)
     var familyId: String = "",
 
     @Column(name = "field_from")

@@ -15,6 +15,13 @@ class MessageController {
 
     @PostMapping("/post")
     fun postMessage(@PathVariable familyId: String, @RequestBody message: Message) {
-        service.postMessage(familyId = familyId, message = message)
+        service.postMessage(message = message)
+    }
+
+    @GetMapping("/get_more")
+    fun getMoreMessages(@RequestBody message: Message): MutableList<Message> {
+        val list = service.getMoreMessages(message)
+        list.size
+        return list
     }
 }
