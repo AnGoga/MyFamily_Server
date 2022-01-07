@@ -8,7 +8,9 @@ import javax.persistence.Id
 
 
 class MessagePK(
+    @Column(name = "family_id")
     var familyId: String = "",
+    @Column(name = "number_field")
     var number: Long = 0
 ) : Serializable {
     constructor() : this("", 0) {}
