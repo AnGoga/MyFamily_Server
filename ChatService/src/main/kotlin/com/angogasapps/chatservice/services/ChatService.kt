@@ -22,7 +22,12 @@ class ChatService {
     }
 
     fun postMessage(message: Message) {
-        var number = 0L
+        val number = getAndIncrement(message)//numbersRepository.getAndIncrement(message.familyId)
+        repository.save(message.also { it.number = number })
+    }
+
+    private fun getAndIncrement(message: Message): Long {
+        var number = 0L;
         synchronized(ChatService::class) {
             val numberObj = numbersRepository.findByIdOrNull(message.familyId)
             if (numberObj == null) {
@@ -32,7 +37,6 @@ class ChatService {
                 numbersRepository.save(FamilyToMessageNumber_Table(familyId = message.familyId, messageNumber = number))
             }
         }
-        repository.save(message.also { it.number = number })
-
+        return number
     }
 }
