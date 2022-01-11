@@ -1,6 +1,7 @@
 package com.angogasapps.chatservice.controllers
 
 import com.angogasapps.chatservice.entities.Message
+import com.angogasapps.chatservice.models.ChatPagingRequest
 import com.angogasapps.chatservice.services.ChatService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -19,8 +20,8 @@ class MessageController {
     }
 
     @GetMapping("/get_more")
-    fun getMoreMessages(@RequestBody message: Message): MutableList<Message> {
-        val list = service.getMoreMessages(message)
+    fun getMoreMessages(@RequestBody requestBody: ChatPagingRequest): MutableList<Message> {
+        val list = service.getMoreMessages(requestBody)
         list.size
         return list
     }

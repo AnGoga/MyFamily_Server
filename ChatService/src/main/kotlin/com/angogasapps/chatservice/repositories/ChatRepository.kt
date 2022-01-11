@@ -32,4 +32,20 @@ interface ChatRepository : CrudRepository<Message, MessagePK> {
         @Param("counts") count: Int
     ): MutableList<Message>
 
+    @Transactional
+    @Modifying
+    @Query(
+        value = """
+        SELECT *
+        FROM messages
+        WHERE family_id = :family_id_param
+        ORDER BY number_field DESC
+        LIMIT :counts
+        """, nativeQuery = true
+    )
+    fun getMoreMessageFromBottom(
+        @Param("family_id_param") familyId: String,
+        @Param("counts") count: Int
+    ): MutableList<Message>
+
 }

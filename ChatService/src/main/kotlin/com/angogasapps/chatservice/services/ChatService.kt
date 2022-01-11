@@ -2,32 +2,41 @@ package com.angogasapps.chatservice.services
 
 import com.angogasapps.chatservice.entities.FamilyToMessageNumber_Table
 import com.angogasapps.chatservice.entities.Message
+import com.angogasapps.chatservice.models.ChatPagingRequest
 import com.angogasapps.chatservice.repositories.ChatRepository
 import com.angogasapps.chatservice.repositories.MessageNumbersRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.crossstore.ChangeSetPersister
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestBody
+import java.security.InvalidParameterException
 
 @Service
 class ChatService {
     @Autowired
     private lateinit var repository: ChatRepository
-
     @Autowired
     private lateinit var numbersRepository: MessageNumbersRepository
+    @Autowired
+    private lateinit var notifier: ChatNotifier
 
-    fun getMoreMessages(m: Message): MutableList<Message> {
-        val list = repository.getMoreMessages(familyId = m.familyId, oldId = m.number, count = 20)
-        return list
+    fun getMoreMessages(m: ChatPagingRequest): MutableList<Message> {
+        return if (m.fromMessageId == -1L) {
+            repository.getMoreMessageFromBottom(familyId = m.familyId, count = m.count)
+        } else if (m.fromMessageId >= 0L) {
+            repository.getMoreMessages(familyId = m.familyId, count = m.count, oldId = m.fromMessageId)
+        } else throw InvalidParameterException("Message id must be bigger that -2! But have count = ${m.fromMessageId}")
     }
 
     fun postMessage(message: Message) {
         val number = getAndIncrement(message)//numbersRepository.getAndIncrement(message.familyId)
         repository.save(message.also { it.number = number })
+        notifier.sendMessage(message)
     }
 
     private fun getAndIncrement(message: Message): Long {
-        var number = 0L;
+        var number = 0L
         synchronized(ChatService::class) {
             val numberObj = numbersRepository.findByIdOrNull(message.familyId)
             if (numberObj == null) {

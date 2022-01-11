@@ -18,13 +18,10 @@ import org.springframework.transaction.annotation.Transactional
 class BuyListService {
     @Autowired
     private lateinit var buyListRepository: BuyListRepository
-
     @Autowired
     private lateinit var productRepository: ProductRepository
-
     @Autowired
     private lateinit var buyListBindingRepository: BuyListBindingRepository
-
     @Autowired
     private lateinit var notifier: BuyListChangesNotifier
 
