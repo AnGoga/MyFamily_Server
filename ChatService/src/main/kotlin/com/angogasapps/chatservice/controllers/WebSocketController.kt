@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController
 class WebSocketController {
 
     @MessageMapping("/chats/families/{family_id}/rooms/{room_id}/broadcast")
-    @SendTo()
+    @SendTo("/chats/families/{family_id}/rooms/{room_id}/broadcast")
     fun echo() {}
 }

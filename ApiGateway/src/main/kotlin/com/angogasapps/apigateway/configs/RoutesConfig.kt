@@ -19,6 +19,12 @@ class RoutesConfig {
             }.route {
                 it.path("/users-and-families/**")
                 .uri("lb://users-and-families-service-client")
+            }.route {
+                it.path("/media_storage/**")
+                    .uri("lb://media-storage-service-client")
+            }.route {
+                it.path("/chat/**")
+                    .uri("lb://chat-service-client")
             }.build()
     }
 }

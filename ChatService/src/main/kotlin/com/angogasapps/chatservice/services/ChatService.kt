@@ -22,16 +22,17 @@ class ChatService {
     private lateinit var notifier: ChatNotifier
 
     fun getMoreMessages(m: ChatPagingRequest): MutableList<Message> {
-        return if (m.fromMessageId == -1L) {
+        return if (m.fromMessage.number == -1L) {
             repository.getMoreMessageFromBottom(familyId = m.familyId, count = m.count)
-        } else if (m.fromMessageId >= 0L) {
-            repository.getMoreMessages(familyId = m.familyId, count = m.count, oldId = m.fromMessageId)
-        } else throw InvalidParameterException("Message id must be bigger that -2! But have count = ${m.fromMessageId}")
+        } else if (m.fromMessage.number >= 0L) {
+            repository.getMoreMessages(familyId = m.familyId, count = m.count, oldId = m.fromMessage.number)
+        } else
+            throw InvalidParameterException("Message id must be bigger that -2! But have count = ${m.fromMessage.number}")
     }
 
     fun postMessage(message: Message) {
         val number = getAndIncrement(message)//numbersRepository.getAndIncrement(message.familyId)
-        repository.save(message.also { it.number = number })
+        repository.save(message.also { it.number = number; it.time = System.currentTimeMillis() })
         notifier.sendMessage(message)
     }
 

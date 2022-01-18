@@ -13,9 +13,9 @@ class MessageController {
     @Autowired
     private lateinit var service: ChatService
 
-
     @PostMapping("/post")
     fun postMessage(@PathVariable familyId: String, @RequestBody message: Message) {
+        message.familyId = familyId
         service.postMessage(message = message)
     }
 
@@ -23,6 +23,12 @@ class MessageController {
     fun getMoreMessages(@RequestBody requestBody: ChatPagingRequest): MutableList<Message> {
         val list = service.getMoreMessages(requestBody)
         list.size
+        list.reverse()
         return list
+    }
+
+    @PostMapping("/get_more")
+    fun getMoreMessagesQuery(@RequestBody query: ChatPagingRequest): MutableList<Message> {
+        return getMoreMessages(requestBody = query)
     }
 }

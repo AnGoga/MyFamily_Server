@@ -1,6 +1,9 @@
 package com.angogasapps.chatservice.entities
 
 import com.angogasapps.chatservice.composite_keys.MessagePK
+import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonGetter
+import com.fasterxml.jackson.annotation.JsonSetter
 import org.hibernate.annotations.GenericGenerator
 import java.io.Serializable
 import javax.persistence.*
@@ -11,6 +14,8 @@ import javax.persistence.*
 data class Message(
     @Id
     @Column(name = "number_field", nullable = false)
+    @JsonAlias("id")
+    @JsonSetter("id")
     var number: Long = 0,
     @Id
     @Column(name = "family_id",nullable = false)
