@@ -16,29 +16,34 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import java.nio.file.Files
 
-@RestController()
+@RestController
 @RequestMapping("media_storage/media/storage")
 class ImageController {
     @Autowired
     private lateinit var repository: MediaStorageRepository
 
     @PostMapping(value = ["/upload"])// consumes = ["multipart/form-data", "application/json"])//, /*produces = [MediaType.IMAGE_JPEG_VALUE]*/
-    fun uploadJPEGImage(@RequestPart("file") file: MultipartFile, @RequestPart("info") infoStr: String): MediaResponse {
+    fun uploadFile(@RequestPart("file") file: MultipartFile, @RequestPart("info") infoStr: String): MediaResponse {
         val info: MediaFileInfo = ObjectMapper().readValue(infoStr, MediaFileInfo::class.java)
         val id = repository.saveFile(file, info)
         val response = MediaResponse(MediaFileInfo(id = id, type = info.type, familyId = info.familyId))
         return response
     }
 
-    @PostMapping(value = ["/get"])//, produces = [MediaType.IMAGE_JPEG_VALUE])  MediaType.APPLICATION_OCTET_STREAM_VALUE
-    fun getMediaFile(@RequestBody info: MediaFileInfo): ResponseEntity<Resource> {
+    @PostMapping(value = ["/get/file"]) //consumes = ["application/octet-stream", "application/json"])//, produces = [MediaType.IMAGE_JPEG_VALUE])  MediaType.APPLICATION_OCTET_STREAM_VALUE
+    fun getMediaFile(@RequestBody info: MediaFileInfo): ResponseEntity<ByteArray> {
         val resource = repository.getMediaFile(info)
+
         return ResponseEntity.ok()
-            .contentType(MediaType.parseMediaType(MediaType.MULTIPART_FORM_DATA_VALUE))
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + info.id + "\"")
-            .body(resource)
+//            .contentType(MediaType.parseMediaType(MediaType.MULTIPART_FORM_DATA_VALUE))
+//            .contentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_VALUE))
+            .contentType(MediaType.parseMediaType(MediaType.APPLICATION_OCTET_STREAM_VALUE))
+//            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + info.id + "\"")
+            .body(Files.readAllBytes(resource.file.toPath()))
+//            .body(resource)
     }
 
     @PostMapping(value = ["/get/image"]) //, produces = [MediaType.IMAGE_JPEG_VALUE])
