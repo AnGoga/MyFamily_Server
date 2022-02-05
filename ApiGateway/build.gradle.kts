@@ -1,19 +1,25 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    application
     id("org.springframework.boot") version "2.5.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.5.31"
     kotlin("plugin.spring") version "1.5.31"
 }
 
+
+
+//mainClassName = "com.angogasapps.apigateway.ApiGatewayApplicationKt"
 group = "com.angogasapps"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+
 repositories {
     mavenCentral()
 }
+
 
 extra["springCloudVersion"] = "2020.0.4"
 
@@ -32,10 +38,13 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
 
-    implementation("io.springfox:springfox-boot-starter:3.0.0")
+//    implementation("io.springfox:springfox-boot-starter:3.0.0")
 
 //    implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
+}
 
+configurations.implementation {
+    exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
 }
 
 dependencyManagement {
@@ -43,6 +52,7 @@ dependencyManagement {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
     }
 }
+
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -54,3 +64,33 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    launchScript()
+}
+
+application {
+    mainClass.set("com.angogasapps.apigateway.ApiGatewayApplicationKt")
+}
+
+springBoot {
+    mainClass.set("com.angogasapps.apigateway.ApiGatewayApplicationKt")
+}
+
+
+
+//bootWar {
+//    classifier = 'boot'
+//}
+//
+//war {
+//    classifier = ''
+//}
+
+//bootJar {
+//    classifier("boot")
+//}
+//
+//jar {
+//    classifier("")
+//}
