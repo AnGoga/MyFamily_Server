@@ -6,6 +6,7 @@
     <file type="web" url="file://$PROJECT_DIR$/BuyListService" />
     <file type="web" url="file://$PROJECT_DIR$/ChatService" />
     <file type="web" url="file://$PROJECT_DIR$/DiscoveryService" />
+    <file type="web" url="file://$PROJECT_DIR$/FamilyStorageService" />
     <file type="web" url="file://$PROJECT_DIR$/MediaStorageService" />
     <file type="web" url="file://$PROJECT_DIR$/users_and_families_microservice" />
   </component>
