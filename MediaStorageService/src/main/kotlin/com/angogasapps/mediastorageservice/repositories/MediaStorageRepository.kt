@@ -1,9 +1,17 @@
 package com.angogasapps.mediastorageservice.repositories
 
+import com.angogasapps.mediastorageservice.enums.EMediaType
 import com.angogasapps.mediastorageservice.models.MediaFileInfo
+import com.angogasapps.mediastorageservice.utils.toStorageType
+import com.netflix.discovery.EurekaClient
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.Resource
 import org.springframework.core.io.UrlResource
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestTemplate
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.nio.file.Files
@@ -16,6 +24,10 @@ import java.util.*
 class MediaStorageRepository {
     private val root: Path //= Paths.get("C:/Java/IT_school_project/project/server_dir/media/images")
     private val absolutePath: String
+    private val restTemplate = RestTemplate()
+
+    @Autowired
+    private lateinit var eurekaClient: EurekaClient
 
     init {
         val path = File("").absolutePath
@@ -24,8 +36,15 @@ class MediaStorageRepository {
         createPath(root)
     }
 
-    fun saveFile(file: MultipartFile, info: MediaFileInfo): String {
-        val id = UUID.randomUUID().toString()
+    fun saveFile(file: MultipartFile, info: MediaFileInfo, extraStr: String?): String {
+        if (info.type == EMediaType.STORAGE_FILE ||
+            info.type == EMediaType.STORAGE_IMAGE ||
+            info.type == EMediaType.STORAGE_NOTE ||
+            info.type == EMediaType.STORAGE_VIDEO
+        ) {
+            saveInFamilyStorageService(info, extraStr)
+        }
+        val id = info.id.ifEmpty { UUID.randomUUID().toString() }
         val path = Paths.get(absolutePath + info.type.buildPath(info)).also { createPath(it) }
         Files.copy(file.inputStream, path.resolve(id))
         return id
@@ -42,6 +61,27 @@ class MediaStorageRepository {
 
     private fun createPath(path: Path) {
         if (!Files.exists(path)) Files.createDirectories(path)
+    }
+
+    private fun saveInFamilyStorageService(info: MediaFileInfo, extraStr: String?) {
+        val instanceInfo = eurekaClient
+            .getApplication("family-storage-service-client")
+            .instances
+            .also { println(it) }
+            .also { it.shuffle() }
+            .get(0)
+
+        val headers = HttpHeaders().apply {
+            contentType = MediaType.APPLICATION_JSON
+            accept = listOf(MediaType.APPLICATION_JSON)
+        }
+        val request: HttpEntity<String> = HttpEntity<String>(extraStr, headers)
+        val response = restTemplate.postForEntity(
+            "http://${instanceInfo.ipAddr}:${instanceInfo.port}/family_storage/data/families/${info.familyId}/data/${info.type.toStorageType()}/create/file",
+            request,
+            String::class.java
+        )
+        info.id = response.body!!
     }
 
 }

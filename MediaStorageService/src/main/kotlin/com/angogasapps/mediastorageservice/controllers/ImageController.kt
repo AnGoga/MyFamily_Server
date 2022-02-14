@@ -5,18 +5,11 @@ import com.angogasapps.mediastorageservice.models.MediaFileInfo
 import com.angogasapps.mediastorageservice.models.MediaResponse
 import com.angogasapps.mediastorageservice.repositories.MediaStorageRepository
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.common.io.ByteStreams.toByteArray
-import com.sun.jersey.core.util.Base64
-import io.swagger.v3.oas.annotations.Parameter
-import org.apache.tomcat.util.http.fileupload.IOUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import org.springframework.core.io.Resource
-import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
 import java.nio.file.Files
 
 @RestController
@@ -24,12 +17,24 @@ import java.nio.file.Files
 class ImageController {
     @Autowired
     private lateinit var repository: MediaStorageRepository
+    private val objectMapper = ObjectMapper()
 
     @PostMapping(value = ["/upload"])// consumes = ["multipart/form-data", "application/json"])//, /*produces = [MediaType.IMAGE_JPEG_VALUE]*/
-    fun uploadFile(@RequestPart("file") file: MultipartFile, @RequestPart("info") infoStr: String): MediaResponse {
-        val info: MediaFileInfo = ObjectMapper().readValue(infoStr, MediaFileInfo::class.java)
-        val id = repository.saveFile(file, info)
-        val response = MediaResponse(MediaFileInfo(id = id, type = info.type, familyId = info.familyId))
+    fun uploadFile(
+        @RequestPart("file") file: MultipartFile,
+        @RequestPart("info") infoStr: String,
+        @RequestPart("extra", required = false) extraStr: String?
+    ): MediaResponse {
+        val info: MediaFileInfo = objectMapper.readValue(infoStr, MediaFileInfo::class.java)
+        val id = repository.saveFile(file, info, extraStr)
+        val response = MediaResponse(
+            MediaFileInfo(
+                id = id,
+                type = info.type,
+                familyId = info.familyId,
+                familyStorageFolderId = info.familyStorageFolderId
+            )
+        )
         return response
     }
 

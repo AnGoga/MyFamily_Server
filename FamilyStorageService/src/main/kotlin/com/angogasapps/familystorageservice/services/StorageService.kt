@@ -1,9 +1,7 @@
 package com.angogasapps.familystorageservice.services
 
-import com.angogasapps.familystorageservice.enums.StorageType
 import com.angogasapps.familystorageservice.models.StorageFile
 import com.angogasapps.familystorageservice.models.StorageFolder
-import com.angogasapps.familystorageservice.models.StorageObject
 import com.angogasapps.familystorageservice.repositories.StorageRepository
 import com.angogasapps.familystorageservice.requests.CreateFileRequest
 import com.angogasapps.familystorageservice.requests.CreateFolderRequest
@@ -12,7 +10,7 @@ import com.angogasapps.familystorageservice.utils.toStorageType
 import com.netflix.discovery.EurekaClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.client.RestTemplate
 import java.util.*
 
 

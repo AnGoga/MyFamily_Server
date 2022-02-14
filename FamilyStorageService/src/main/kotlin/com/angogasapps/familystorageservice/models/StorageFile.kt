@@ -1,7 +1,8 @@
 package com.angogasapps.familystorageservice.models
 
-import com.angogasapps.familystorageservice.enums.StorageObjectType
-import com.angogasapps.familystorageservice.enums.StorageType
+import com.angogasapps.familystorageservice.enums.EFamilyStorageType
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
 import javax.persistence.Entity
@@ -17,10 +18,9 @@ data class StorageFile(
     override var familyId: String = "",
     @Column(name = "root_folder_id")
     override var rootFolderId: String? = null,
-    override var storageType: StorageType? = null
+    override var storageType: EFamilyStorageType? = null
 ) : StorageObject(id, name, familyId, rootFolderId, storageType) {
 //    override val type: StorageObjectType = StorageObjectType.TYPE_FILE
-
     override fun isFile(): Boolean = true
     override fun isFolder(): Boolean = false
 }

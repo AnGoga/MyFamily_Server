@@ -1,7 +1,6 @@
 package com.angogasapps.familystorageservice.models
 
-import com.angogasapps.familystorageservice.enums.StorageObjectType
-import com.angogasapps.familystorageservice.enums.StorageType
+import com.angogasapps.familystorageservice.enums.EFamilyStorageType
 import javax.persistence.*
 
 @Entity(name = "StorageFolder")
@@ -16,7 +15,7 @@ data class StorageFolder(
     override var familyId: String = "",
     @Column(name = "root_folder_id")
     override var rootFolderId: String? = null,
-    override var storageType: StorageType? = null
+    override var storageType: EFamilyStorageType? = null
 ) : StorageObject(id, name, familyId, rootFolderId, storageType) {
 //    override val type: StorageObjectType = StorageObjectType.TYPE_FOLDER
 

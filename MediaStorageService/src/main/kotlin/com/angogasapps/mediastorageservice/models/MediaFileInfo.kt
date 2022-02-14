@@ -3,7 +3,9 @@ package com.angogasapps.mediastorageservice.models
 import com.angogasapps.mediastorageservice.enums.EMediaType
 
 data class MediaFileInfo(
-    val id: String = "",
+    var id: String = "",
     val type: EMediaType = EMediaType.NOTHING,
-    val familyId: String = ""
+    val familyId: String = "",
+    val familyStorageFolderId: String = "",
+//    val storageType: String = ""
 )

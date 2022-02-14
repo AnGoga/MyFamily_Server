@@ -1,12 +1,13 @@
 package com.angogasapps.familystorageservice.models
 
-import com.angogasapps.familystorageservice.enums.StorageObjectType
-import com.angogasapps.familystorageservice.enums.StorageType
+import com.angogasapps.familystorageservice.enums.EFamilyStorageType
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import javax.persistence.*
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "StorageObject_Type")
+@JsonIgnoreProperties(value = arrayOf("folder", "file", "rootFolderId", "familyId", "storageType"))
 abstract class StorageObject(
     @Id
     open var id: String = "",
@@ -14,7 +15,7 @@ abstract class StorageObject(
     open var familyId: String = "",
     @Column(name = "root_folder_id")
     open var rootFolderId: String? = null,
-    open var storageType: StorageType? = null
+    open var storageType: EFamilyStorageType? = null
 ) {
 
 //    abstract val type: StorageObjectType

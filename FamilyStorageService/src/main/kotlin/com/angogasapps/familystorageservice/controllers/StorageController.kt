@@ -1,8 +1,6 @@
 package com.angogasapps.familystorageservice.controllers
 
-import com.angogasapps.familystorageservice.enums.StorageType
 import com.angogasapps.familystorageservice.models.StorageFolder
-import com.angogasapps.familystorageservice.models.StorageObject
 import com.angogasapps.familystorageservice.requests.CreateFileRequest
 import com.angogasapps.familystorageservice.requests.CreateFolderRequest
 import com.angogasapps.familystorageservice.services.StorageService
@@ -28,8 +26,8 @@ class StorageController {
         @PathVariable familyId: String,
         @PathVariable storageType: String,
         @RequestBody request: CreateFolderRequest
-    ) {
-        service.createFolder(familyId = familyId, request = request, storageType = storageType)
+    ): String {
+        return service.createFolder(familyId = familyId, request = request, storageType = storageType)
     }
 
     @PostMapping("/create/file")
@@ -37,8 +35,8 @@ class StorageController {
         @PathVariable familyId: String,
         @PathVariable storageType: String,
         @RequestBody request: CreateFileRequest
-    ) {
-        service.createFile(familyId = familyId, request = request, storageType = storageType)
+    ): String {
+        val fileId = service.createFile(familyId = familyId, request = request, storageType = storageType)
+        return fileId
     }
-
 }
