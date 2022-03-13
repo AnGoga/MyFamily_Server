@@ -3,14 +3,12 @@ package com.angogasapps.familystorageservice.services
 import com.angogasapps.familystorageservice.models.StorageFile
 import com.angogasapps.familystorageservice.models.StorageFolder
 import com.angogasapps.familystorageservice.repositories.StorageRepository
-import com.angogasapps.familystorageservice.requests.CreateFileRequest
-import com.angogasapps.familystorageservice.requests.CreateFolderRequest
+import com.angogasapps.familystorageservice.requests.StorageRequest
 import com.angogasapps.familystorageservice.utils.ROOT_FOLDER_ID
 import com.angogasapps.familystorageservice.utils.toStorageType
 import com.netflix.discovery.EurekaClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import java.util.*
 
 
@@ -35,7 +33,7 @@ class StorageService {
 
     }
 
-    fun createFolder(familyId: String, request: CreateFolderRequest, storageType: String): String {
+    fun createFolder(familyId: String, request: StorageRequest, storageType: String): String {
         val id = UUID.randomUUID().toString()
         val folder =
             StorageFolder(id = id, name = request.name, familyId = familyId, rootFolderId = request.rootFolder).also {
@@ -46,7 +44,7 @@ class StorageService {
         return id
     }
 
-    fun createFile(familyId: String, request: CreateFileRequest, storageType: String): String {
+    fun createFile(familyId: String, request: StorageRequest, storageType: String): String {
         val id = UUID.randomUUID().toString()
         val file = StorageFile(
             id = id,
@@ -60,5 +58,20 @@ class StorageService {
         }
         storageRepository.save(file)
         return id
+    }
+
+    fun removeFile(request: StorageRequest) {
+        storageRepository.deleteById(request.id)
+    }
+
+    fun removeFolder(request: StorageRequest): List<String> {
+        return getIdsAndRemoveFolder(request)
+    }
+
+    fun getIdsAndRemoveFolder(request: StorageRequest): List<String> {
+        val entity = storageRepository.findById(request.id).get()
+        val listIds = (entity as StorageFolder).getNestedFolderIds()
+        storageRepository.deleteById(request.id)
+        return listIds
     }
 }

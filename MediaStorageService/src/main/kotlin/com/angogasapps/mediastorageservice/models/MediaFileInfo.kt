@@ -8,4 +8,9 @@ data class MediaFileInfo(
     val familyId: String = "",
     val familyStorageFolderId: String = "",
 //    val storageType: String = ""
-)
+) {
+    fun isFamilyStorageFile() = (type == EMediaType.STORAGE_FILE ||
+            type == EMediaType.STORAGE_IMAGE ||
+            type == EMediaType.STORAGE_NOTE ||
+            type == EMediaType.STORAGE_VIDEO)
+}

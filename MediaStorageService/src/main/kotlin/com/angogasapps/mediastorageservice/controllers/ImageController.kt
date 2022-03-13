@@ -4,6 +4,7 @@ import com.angogasapps.mediastorageservice.enums.EMediaType
 import com.angogasapps.mediastorageservice.models.MediaFileInfo
 import com.angogasapps.mediastorageservice.models.MediaResponse
 import com.angogasapps.mediastorageservice.repositories.MediaStorageRepository
+import com.angogasapps.mediastorageservice.services.MediaStorageService
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -15,9 +16,9 @@ import java.nio.file.Files
 @RestController
 @RequestMapping("media_storage/media/storage")
 class ImageController {
-    @Autowired
-    private lateinit var repository: MediaStorageRepository
     private val objectMapper = ObjectMapper()
+    @Autowired
+    private lateinit var service: MediaStorageService
 
     @PostMapping(value = ["/upload"])// consumes = ["multipart/form-data", "application/json"])//, /*produces = [MediaType.IMAGE_JPEG_VALUE]*/
     fun uploadFile(
@@ -26,21 +27,12 @@ class ImageController {
         @RequestPart("extra", required = false) extraStr: String?
     ): MediaResponse {
         val info: MediaFileInfo = objectMapper.readValue(infoStr, MediaFileInfo::class.java)
-        val id = repository.saveFile(file, info, extraStr)
-        val response = MediaResponse(
-            MediaFileInfo(
-                id = id,
-                type = info.type,
-                familyId = info.familyId,
-                familyStorageFolderId = info.familyStorageFolderId
-            )
-        )
-        return response
+        return service.uploadFile(file = file, info = info, extraStr = extraStr)
     }
 
     @PostMapping(value = ["/get/file"]) //consumes = ["application/octet-stream", "application/json"])//, produces = [MediaType.IMAGE_JPEG_VALUE])  MediaType.APPLICATION_OCTET_STREAM_VALUE
     fun getMediaFile(@RequestBody info: MediaFileInfo): ResponseEntity<ByteArray> {
-        val resource = repository.getMediaFile(info)
+        val resource = service.getMediaFile(info)
 
         return ResponseEntity.ok()
 //            .contentType(MediaType.parseMediaType(MediaType.MULTIPART_FORM_DATA_VALUE))
@@ -53,7 +45,7 @@ class ImageController {
 
     @PostMapping(value = ["/get/image"]) //, produces = [MediaType.IMAGE_JPEG_VALUE])
     fun getJPEGImage(@RequestBody info: MediaFileInfo): ResponseEntity<ByteArray> {
-        val resource = repository.getMediaFile(info)
+        val resource = service.getMediaFile(info)
         return ResponseEntity.ok()
             .contentType(MediaType.parseMediaType(MediaType.IMAGE_JPEG_VALUE))
             .body(Files.readAllBytes(resource.file.toPath()))
@@ -67,5 +59,15 @@ class ImageController {
     ): ResponseEntity<ByteArray> {
         val info = MediaFileInfo(id = id, familyId = familyId, type = EMediaType.valueOf(type))
         return getJPEGImage(info)
+    }
+
+    @DeleteMapping("/remove/file")
+    fun removeStorageFile(@RequestBody info: MediaFileInfo) {
+        service.removeFile(info)
+    }
+
+    @DeleteMapping("/remove/folder")
+    fun removeStorageFolder(@RequestBody info: MediaFileInfo) {
+        service.removeFolder(info)
     }
 }

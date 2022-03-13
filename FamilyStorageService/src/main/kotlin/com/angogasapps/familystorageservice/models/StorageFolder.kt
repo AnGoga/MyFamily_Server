@@ -21,4 +21,19 @@ data class StorageFolder(
 
     override fun isFile(): Boolean = false
     override fun isFolder(): Boolean = true
+
+    fun getNestedFolderIds(): List<String> {
+        val list = ArrayList<String>()
+        recurentFindIds(this, list)
+        return list
+    }
+
+    fun recurentFindIds(obj: StorageFolder, list: ArrayList<String>) {
+        obj.value.forEach {
+            if (it.isFolder()) {
+                list.add(it.id)
+                recurentFindIds(it as StorageFolder, list)
+            }
+        }
+    }
 }
