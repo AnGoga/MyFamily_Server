@@ -15,9 +15,6 @@ import java.util.*
 @Service
 class StorageService {
     @Autowired
-    private lateinit var eurekaClient: EurekaClient
-
-    @Autowired
     private lateinit var storageRepository: StorageRepository
 
     fun getStorageContent(
@@ -30,7 +27,6 @@ class StorageService {
             storageType.toStorageType()
         )
         return StorageFolder(id = ROOT_FOLDER_ID, name = ROOT_FOLDER_ID, familyId = familyId, value = list)
-
     }
 
     fun createFolder(familyId: String, request: StorageRequest, storageType: String): String {
@@ -38,14 +34,14 @@ class StorageService {
         val folder =
             StorageFolder(id = id, name = request.name, familyId = familyId, rootFolderId = request.rootFolder).also {
                 it.storageType = storageType.toStorageType()
-                if (it.rootFolderId == "") it.rootFolderId = null
+                if (it.rootFolderId == "" || it.rootFolderId == "base_folder") it.rootFolderId = null
             }
         storageRepository.save(folder)
         return id
     }
 
     fun createFile(familyId: String, request: StorageRequest, storageType: String): String {
-        val id = UUID.randomUUID().toString()
+        val id = if(request.id.isEmpty()) UUID.randomUUID().toString() else request.id
         val file = StorageFile(
             id = id,
             name = request.name,
@@ -54,8 +50,10 @@ class StorageService {
             rootFolderId = request.rootFolder
         ).also {
             it.storageType = storageType.toStorageType()
-            if (it.rootFolderId == "") it.rootFolderId = null
+//            println(it)
+            if (it.rootFolderId == "" || it.rootFolderId == "base_folder") it.rootFolderId = null
         }
+        println(file)
         storageRepository.save(file)
         return id
     }
@@ -73,5 +71,9 @@ class StorageService {
         val listIds = (entity as StorageFolder).getNestedFolderIds()
         storageRepository.deleteById(request.id)
         return listIds
+    }
+
+    fun updateName(request: StorageRequest) {
+        storageRepository.renameObject(id = request.id, name = request.name)
     }
 }

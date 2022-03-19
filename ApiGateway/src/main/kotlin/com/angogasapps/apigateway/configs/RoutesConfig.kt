@@ -34,6 +34,9 @@ class RoutesConfig {
                 it.path("/chat/**")
                     .uri("lb://chat-service-client")
             }.route {
+                it.path("/family_storage/**")
+                    .uri("lb://family-storage-service-client")
+            }.route {
                 it.path("/chat/websockets/endpoint")
                     .uri("lb:ws://chat-service-client")
             }.route {

@@ -46,7 +46,7 @@ class MediaStorageRepository {
         return if (resource.exists() || resource.isReadable)
             resource
         else
-            throw RuntimeException("Could not read the file!")
+            throw RuntimeException("Could not read the file! This id is \"${info.id}\" and it path in \"${file.toUri()}\"")
     }
 
     private fun createPath(path: Path) {

@@ -27,6 +27,8 @@ class ImageController {
         @RequestPart("extra", required = false) extraStr: String?
     ): MediaResponse {
         val info: MediaFileInfo = objectMapper.readValue(infoStr, MediaFileInfo::class.java)
+        println(info)
+        println(extraStr)
         return service.uploadFile(file = file, info = info, extraStr = extraStr)
     }
 

@@ -1,6 +1,7 @@
 package com.angogasapps.familystorageservice.models
 
 import com.angogasapps.familystorageservice.enums.EFamilyStorageType
+import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.*
 
 @Entity(name = "StorageFolder")
@@ -11,6 +12,7 @@ data class StorageFolder(
     override var name: String = "",
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "root_folder_id")
+    @JsonProperty("values")
     var value: MutableList<StorageObject> = ArrayList(),
     override var familyId: String = "",
     @Column(name = "root_folder_id")

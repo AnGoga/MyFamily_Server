@@ -5,10 +5,12 @@ import com.angogasapps.familystorageservice.models.StorageFolder
 import com.angogasapps.familystorageservice.models.StorageObject
 import com.angogasapps.familystorageservice.requests.StorageRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-
+import org.springframework.transaction.annotation.Transactional
 
 
 @Repository
@@ -18,6 +20,11 @@ interface StorageRepository : CrudRepository<StorageObject, String> {
         familyId: String,
         storageType: EFamilyStorageType
     ): MutableList<StorageObject>
+
+    @Modifying
+    @Transactional
+    @Query("update StorageObject so set so.name = :name where so.id = :id")
+    fun renameObject(@Param("id") id: String, @Param("name") name: String)
 }
 
 

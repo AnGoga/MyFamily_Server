@@ -1,5 +1,8 @@
 package com.angogasapps.familystorageservice.requests
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 class StorageRequest(
     val id: String = "",
     val name: String = "",

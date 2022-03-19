@@ -4,6 +4,7 @@ import com.angogasapps.familystorageservice.models.StorageFolder
 import com.angogasapps.familystorageservice.requests.StorageRequest
 import com.angogasapps.familystorageservice.services.StorageService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -29,12 +30,13 @@ class StorageController {
         return service.createFolder(familyId = familyId, request = request, storageType = storageType)
     }
 
-    @PostMapping("/create/file")
+    @PostMapping("/create/file", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createFile(
         @PathVariable familyId: String,
         @PathVariable storageType: String,
         @RequestBody request: StorageRequest
     ): String {
+//        println(request)
         val fileId = service.createFile(familyId = familyId, request = request, storageType = storageType)
         return fileId
     }
@@ -55,5 +57,14 @@ class StorageController {
         @RequestBody info: StorageRequest
     ): List<String> {
         return service.removeFolder(info)
+    }
+
+    @PatchMapping("/update/name")
+    fun updateName(
+        @PathVariable familyId: String,
+        @PathVariable storageType: String,
+        @RequestBody request: StorageRequest
+    ) {
+        service.updateName(request)
     }
 }

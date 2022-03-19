@@ -7,7 +7,7 @@ import javax.persistence.*
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "StorageObject_Type")
-@JsonIgnoreProperties(value = arrayOf("folder", "file", "rootFolderId", "familyId", "storageType"))
+@JsonIgnoreProperties(value = arrayOf("folder", /*"file",*/ "rootFolderId", "familyId", "storageType"))
 abstract class StorageObject(
     @Id
     open var id: String = "",

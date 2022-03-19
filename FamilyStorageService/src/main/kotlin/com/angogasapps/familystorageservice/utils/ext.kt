@@ -13,7 +13,7 @@ fun String.toStorageType() : EFamilyStorageType =
     when(this.lowercase()) {
         NODE_IMAGE_STORAGE -> EFamilyStorageType.STORAGE_IMAGE
         NODE_FILE_STORAGE -> EFamilyStorageType.STORAGE_FILE
-        NODE_NOTE_STORAGE -> EFamilyStorageType.STORAGE_NOTE
+        NODE_NOTE_STORAGE, "storage_note" -> EFamilyStorageType.STORAGE_NOTE
         NODE_VIDEO_STORAGE -> EFamilyStorageType.STORAGE_VIDEO
         else -> throw IllegalArgumentException("This string \"${this}\" not is StorageType")
     }

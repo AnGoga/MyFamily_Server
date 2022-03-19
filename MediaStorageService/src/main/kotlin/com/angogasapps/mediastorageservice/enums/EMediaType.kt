@@ -20,15 +20,16 @@ enum class EMediaType: Pathable {
         override fun buildPath(fileInfo: MediaFileInfo) = "\\users_data\\users_photos\\"
     },
     STORAGE_IMAGE {
-        override fun buildPath(fileInfo: MediaFileInfo) = "\\family_storage\\${fileInfo.familyId}\\images_storage\\${fileInfo.familyStorageFolderId}"
+//        override fun buildPath(fileInfo: MediaFileInfo) = "\\family_storage\\${fileInfo.familyId}\\images_storage\\${fileInfo.rootFolder}"
+        override fun buildPath(fileInfo: MediaFileInfo) = "\\family_storage\\${fileInfo.familyId}\\images_storage\\"
     },
     STORAGE_NOTE {
-        override fun buildPath(fileInfo: MediaFileInfo) = "\\family_storage\\${fileInfo.familyId}\\notes_storage\\${fileInfo.familyStorageFolderId}"
+        override fun buildPath(fileInfo: MediaFileInfo) = "\\family_storage\\${fileInfo.familyId}\\notes_storage\\${fileInfo.rootFolder}"
     },
     STORAGE_FILE {
-        override fun buildPath(fileInfo: MediaFileInfo) = "\\family_storage\\${fileInfo.familyId}\\files_storage\\${fileInfo.familyStorageFolderId}"
+        override fun buildPath(fileInfo: MediaFileInfo) = "\\family_storage\\${fileInfo.familyId}\\files_storage\\"
     },
     STORAGE_VIDEO {
-        override fun buildPath(fileInfo: MediaFileInfo) = "\\family_storage\\${fileInfo.familyId}\\videos_storage\\${fileInfo.familyStorageFolderId}"
+        override fun buildPath(fileInfo: MediaFileInfo) = "\\family_storage\\${fileInfo.familyId}\\videos_storage\\${fileInfo.rootFolder}"
     }
 }

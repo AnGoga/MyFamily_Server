@@ -21,16 +21,17 @@ class MediaStorageService {
     private lateinit var communicationService: CommunicationService
 
     fun uploadFile(file: MultipartFile, info: MediaFileInfo, extraStr: String?): MediaResponse {
+        val id = repository.saveFile(file, info, extraStr)
+        info.id = id
         if (info.isFamilyStorageFile()) {
             saveInFamilyStorageService(info, extraStr)
         }
-        val id = repository.saveFile(file, info, extraStr)
         val response = MediaResponse(
             MediaFileInfo(
                 id = id,
                 type = info.type,
                 familyId = info.familyId,
-                familyStorageFolderId = info.familyStorageFolderId
+                rootFolder = info.rootFolder
             )
         )
         return response
