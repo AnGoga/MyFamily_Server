@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 
+
 @RestController
 @RequestMapping("media_storage/media/storage")
 class ImageController {

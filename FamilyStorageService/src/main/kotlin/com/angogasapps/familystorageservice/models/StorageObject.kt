@@ -18,7 +18,6 @@ abstract class StorageObject(
     open var storageType: EFamilyStorageType? = null
 ) {
 
-//    abstract val type: StorageObjectType
     abstract fun isFile(): Boolean
     abstract fun isFolder(): Boolean
 

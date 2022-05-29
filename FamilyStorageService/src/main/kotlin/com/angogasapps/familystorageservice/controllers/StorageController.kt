@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
+
 @RestController
 @RequestMapping("/family_storage/data/families/{familyId}/data/{storageType}")
 class StorageController {
@@ -36,7 +37,6 @@ class StorageController {
         @PathVariable storageType: String,
         @RequestBody request: StorageRequest
     ): String {
-//        println(request)
         val fileId = service.createFile(familyId = familyId, request = request, storageType = storageType)
         return fileId
     }

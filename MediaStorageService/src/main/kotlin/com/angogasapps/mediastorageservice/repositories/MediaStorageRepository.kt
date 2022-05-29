@@ -25,7 +25,6 @@ class MediaStorageRepository {
     private val root: Path //= Paths.get("C:/Java/IT_school_project/project/server_dir/media/images")
     private val absolutePath: String
 
-
     init {
         val path = File("").absolutePath
         absolutePath = "$path\\media_storage\\storage"

@@ -77,5 +77,4 @@ class MediaStorageService {
         )
         info.id = response.body!!
     }
-
 }

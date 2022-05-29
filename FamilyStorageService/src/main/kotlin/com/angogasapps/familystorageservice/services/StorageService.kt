@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
-
 @Service
 class StorageService {
     @Autowired
@@ -50,7 +49,6 @@ class StorageService {
             rootFolderId = request.rootFolder
         ).also {
             it.storageType = storageType.toStorageType()
-//            println(it)
             if (it.rootFolderId == "" || it.rootFolderId == "base_folder") it.rootFolderId = null
         }
         println(file)
